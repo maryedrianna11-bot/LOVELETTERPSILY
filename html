@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Honeybunch's Love Letters 💌</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dream: #ffe6eb;
+            --cute-white: #fffafa;
+            --soft-pink: #ffafcc;
+            --sparkle-pink: #ff4d6d;
+            --cute-text: #6d4c51;
+            --cute-glow: 0 0 15px rgba(255, 77, 109, 0.4);
+            --shadow-cute: 0 8px 30px rgba(255, 182, 193, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--bg-dream);
+            overflow-x: hidden;
+            color: var(--cute-text);
+            min-height: 100vh;
+        }
+
+        /* CINEMATIC INTRO */
+        #intro {
+            position: fixed;
+            inset: 0;
+            background: #ffe6f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: cuteFadeOut 4s ease forwards 3.5s;
+        }
+        #intro h1 {
+            font-family: 'Dancing Script', cursive;
+            color: var(--sparkle-pink);
+            font-size: 3rem;
+            text-shadow: var(--cute-glow);
+            animation: introHeartBeat 1.5s ease infinite alternate;
+        }
+        @keyframes cuteFadeOut { to { opacity: 0; visibility: hidden; } }
+        @keyframes introHeartBeat { from { transform: scale(1); } to { transform: scale(1.05); } }
+
+        /* FLOATING HEARTS */
+        .heart {
+            position: fixed;
+            color: var(--soft-pink);
+            animation: fall 6s linear infinite;
+            z-index: -1;
+            user-select: none;
+        }
+        @keyframes fall {
+            0% { transform: translateY(105vh) rotate(0deg) scale(0); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg) scale(1.2); opacity: 0; }
+        }
+
+        /* LOCK SCREEN */
+        #lock {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #fffafa, #ffe6eb);
+            position: fixed;
+            width: 100%;
+            z-index: 999;
+            transition: 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 35px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: var(--shadow-cute);
+            width: 90%; max-width: 380px;
+            border: 2px solid #fff;
+            animation: cardWiggle 2s infinite ease-in-out alternate;
+        }
+        @keyframes cardWiggle { from { transform: rotate(-2deg); } to { transform: rotate(2deg); } }
+
+        input {
+            padding: 15px; width: 100%; margin: 15px 0; border-radius: 20px;
+            border: 3px solid var(--soft-pink); text-align: center; outline: none;
+            color: var(--sparkle-pink); font-weight: 500;
+        }
+
+        button {
+            padding: 12px 30px; border: none; border-radius: 25px; cursor: pointer;
+            background-color: var(--sparkle-pink); color: white; font-weight: bold;
+            transition: 0.4s; box-shadow: 0 4px 10px rgba(255, 77, 109, 0.3);
+        }
+        button:hover { transform: scale(1.1); box-shadow: var(--cute-glow); }
+
+        /* MAIN CONTENT */
+        main { display: none; padding: 40px 20px; text-align: center; }
+        .title { font-family: 'Dancing Script', cursive; font-size: 3rem; color: var(--sparkle-pink); margin-bottom: 20px; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px; margin: 0 auto 40px auto; max-width: 1100px;
+        }
+
+        .box {
+            background: var(--cute-white); padding: 20px; border-radius: 20px;
+            cursor: pointer; transition: 0.4s; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 2px solid transparent; display: flex; flex-direction: column; align-items: center;
+        }
+        .box:hover { transform: translateY(-10px); border-color: var(--soft-pink); box-shadow: var(--cute-glow); }
+        .category-name { font-size: 0.95rem; color: var(--cute-text); margin-top: 10px; font-weight: 600; }
+
+        /* MODAL */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1001; backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: var(--cute-white); padding: 40px 30px; border-radius: 35px;
+            width: 90%; max-width: 500px; text-align: center; position: relative;
+            animation: cutePop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 4px solid var(--soft-pink);
+        }
+        @keyframes cutePop { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .letter { font-size: 1.1rem; line-height: 1.6; margin-top: 20px; text-align: left; min-height: 100px; }
+        .close { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: #aaa; }
+        
+        .spotify-wrap { margin: 40px auto; max-width: 500px; border: 4px solid var(--soft-pink); border-radius: 16px; background: white; box-shadow: var(--cute-glow); }
+    </style>
+</head>
+<body>
+
+<div id="intro">
+    <h1>For My 21st Love Story 💖</h1>
+</div>
+
+<div id="lock">
+    <div class="card">
+        <h2 style="font-family: 'Dancing Script'; font-size: 2.5rem; color: var(--sparkle-pink);">Hello Langga 💖</h2>
+        <p>Enter password</p>
+        <input id="pass" type="password" placeholder="••••••••••••">
+        <button onclick="openSite()">Unlock My Heart ✨</button>
+    </div>
+</div>
+
+<main>
+    <h1 class="title">Open When Letters 💌</h1>
+    <div class="grid" id="grid"></div>
+    <div class="spotify-wrap">
+        <iframe id="player" style="border-radius:12px" src="http://googleusercontent.com/spotify.com/8" width="100%" height="152" frameborder="0" allowfullscreen allow="autoplay"></iframe>
+    </div>
+</main>
+
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeM()">×</span>
+        <h3 id="t" style="font-family: 'Dancing Script'; font-size: 2rem; color: var(--sparkle-pink);"></h3>
+        <div class="letter" id="l"></div>
+        <button onclick="closeM()" style="margin-top:20px">Close 🎀</button>
+    </div>
+</div>
+
+<script>
+const data = [
+    { name: "When You’re Angry", icon: "😡", letters: [
+        "Langga… I know your anger feels overwhelming. But I need you to slow down for me, breathe deeply.",
+        "Hey my langlang… I’m not your enemy, I’m your safe place. Take a step back, breathe.",
+        "My honeybunch… even when your temper rises, you are still the person I deeply love.",
+        "Baby… pause for a moment. Not everything deserves your energy. Let it pass, I’m waiting for you.",
+        "Langga… I love you even when your emotions are messy. Come back to peace when you’re ready."
+    ]},
+    { name: "When You’re Stressed", icon: "😫", letters: [
+        "Langga… you don’t have to carry it all at once. Just breathe with me, I’m here holding you through it.",
+        "Hey honeybunch… stress makes life feel like it’s collapsing, but I promise you it’s not as impossible as it looks.",
+        "My langlang… you’ve survived so many overwhelming days. That alone proves how strong you are.",
+        "Baby… you are not your stress. I see your effort and I'm so proud of you.",
+        "Sugarplum… be kind to yourself. Resting is also part of moving forward."
+    ]},
+    { name: "When You Feel Lonely", icon: "🥺", letters: [
+        "Langga… even when the world feels quiet, you are never truly alone. I’m here with you in every thought.",
+        "Honeybunch… loneliness can make you feel invisible, but you are deeply seen and loved by me.",
+        "Langlang… even if no one is physically beside you right now, I am emotionally holding you close.",
+        "Baby… I don’t want you to believe the lie that you don’t matter. You matter so much to me.",
+        "Sugarplum… if you ever feel alone again, read this slowly. I am here, I care, and I will always choose you."
+    ]},
+    { name: "When You Need Motivation", icon: "💪", letters: [
+        "Langga… you are capable of more than you realize. Even slow steps are still progress.",
+        "Baby… I believe in you even when you feel like giving up. You are stronger than your doubt.",
+        "Honeybunch… you don’t need perfect timing. You just need to start, even if it feels small.",
+        "Langlang… remember everything you’ve already survived. You always find a way through.",
+        "Sugarplum… I’m cheering for you quietly in every step you take. Don’t stop now."
+    ]},
+    { name: "When You Can’t Sleep", icon: "🌙", letters: [
+        "Langga… close your eyes and imagine me sitting beside you until your thoughts slow down.",
+        "Baby… don’t fight your sleep tonight. Let your body rest. Tomorrow will feel lighter.",
+        "Honeybunch… overthinking is louder at night, but nothing needs to be solved right now.",
+        "Langlang… I wish I could hold your hand until you fall asleep peacefully.",
+        "Sugarplum… sleep now with a calm heart. I’ll still be here when you wake up."
+    ]},
+    { name: "When You Had a Bad Day", icon: "🌧", letters: [
+        "Langga… I’m sorry today felt heavy. One bad day does not define your entire life or your worth.",
+        "Baby… I still care about you the same even if today didn’t go well.",
+        "Honeybunch… even if things went wrong, you still tried your best and that is something to be proud of.",
+        "Langlang… let today go slowly. You don’t need to carry its weight into tomorrow.",
+        "Sugarplum… I hope you can forgive yourself for today. You are still learning and growing."
+    ]},
+    { name: "When Overthinking", icon: "🧠", letters: [
+        "Langga… not every thought is true. Sometimes fears speak louder than reality. Trust me, not them.",
+        "Baby… breathe slowly with me. You don’t need to solve your whole life in one night.",
+        "Honeybunch… I’m still here with you. Don’t let your thoughts pull you away from peace.",
+        "Langlang… come back to the present. Right now, you are safe and loved.",
+        "Sugarplum… your mind might feel loud, but my love for you is louder than all your worries."
+    ]},
+    { name: "When You Need to Smile", icon: "🤭", letters: [
+        "Langga… I miss your smile so much. The way it lights everything up.",
+        "Baby… you are loved deeply, even on days you forget it. Smile for me!",
+        "Honeybunch… I hope your heart softens today and allows a small smile to appear.",
+        "Langlang… just thinking of you makes me smile, and I hope that feeling reaches you too.",
+        "Sugarplum… please smile for me, even just a little. You deserve happiness."
+    ]},
+    { name: "When You Need a Hug", icon: "🫂", letters: [
+        "Langga… imagine me wrapping my arms around you so tightly right now, not letting go.",
+        "Baby… I wish I could physically hold you, but for now, let my words be your comfort.",
+        "Honeybunch… come closer in your thoughts, I’m hugging you gently and protecting your heart.",
+        "Langlang… stay in this moment of comfort for a while. I've got you.",
+        "Sugarplum… you are safe in my love, even when everything else feels uncertain."
+    ]},
+    { name: "When You Doubt Yourself", icon: "💎", letters: [
+        "Langga… you are so much bigger, stronger, and more beautiful than those doubting thoughts.",
+        "Baby… even when you question yourself, I never stop believing in you.",
+        "Honeybunch… growth is not always loud. Sometimes it is slow and quiet, but still real.",
+        "Langlang… don’t let doubt erase how far you’ve already come.",
+        "Sugarplum… I trust you even when you struggle to trust yourself."
+    ]},
+    { name: "When We Fight", icon: "⚡", letters: [
+        "Langga… even when we argue, my care for you does not disappear.",
+        "Baby… fights are moments, not definitions of our love. I’m still here.",
+        "Honeybunch… I don’t want distance between us, only understanding and peace.",
+        "Langlang… when you are ready, I’m here to listen and fix things together.",
+        "Sugarplum… I still choose you, even in difficult moments like this."
+    ]},
+    { name: "When You Feel Tired", icon: "🛌", letters: [
+        "Langga… your body and mind deserve rest. You don’t have to keep pushing.",
+        "Baby… I see how tired you are, and I want you to take care of yourself gently.",
+        "Honeybunch… slowing down is not failure, it is care for yourself.",
+        "Langlang… even exhaustion doesn’t take away how strong you are.",
+        "Sugarplum… I’m proud of you for surviving each day."
+    ]},
+    { name: "When You Need Love", icon: "💓", letters: [
+        "Langga… I love you in ways I can’t fully explain with words alone.",
+        "Baby… even when you feel unlovable, you are still deeply loved by me.",
+        "Honeybunch… you don’t have to earn my love, it’s already yours completely.",
+        "Langlang… you already hold my heart in every possible way.",
+        "Sugarplum… I choose you every day, without hesitation."
+    ]},
+    { name: "When You’re Jealous", icon: "🤨", letters: [
+        "Langga… jealousy is heavy, but I chose you, and I keep choosing you.",
+        "Baby… you don’t have to compete with anyone for my love. My heart is yours.",
+        "Honeybunch… nothing and no one replaces what you mean to me.",
+        "Langlang… talk to me, let me reassure you. I'd rather heal your fear than watch you suffer.",
+        "Sugarplum… you are more than enough for me in every possible way."
+    ]},
+    { name: "When You Lose a Game", icon: "🎮", letters: [
+        "Langga… don’t let a game make you feel small. You are still amazing.",
+        "Baby… winning or losing does not define your worth. I love your effort.",
+        "Honeybunch… I’m proud of you because you play with heart.",
+        "Langlang… don’t let a loss make you forget how capable you are.",
+        "Sugarplum… even if you lose a hundred times, you will still be my winner."
+    ]},
+    { name: "When You Feel Unloved", icon: "💔", letters: [
+        "Langga… read this slowly: you are deeply loved, even when your heart tries to tell you otherwise.",
+        "Baby… I promise you, you are incredibly important to me.",
+        "Honeybunch… you are loved, you matter, and you are not alone.",
+        "Langlang… please don’t let temporary feelings erase permanent truths. My love is constant.",
+        "Sugarplum… even in your darkest moments, I am here loving you quietly and strongly."
+    ]},
+    { name: "Open Anytime", icon: "✨", letters: [
+        "Langga… in every version of you, I am still proud and still loving you deeply.",
+        "Baby… you are enough. Never forget that.",
+        "Honeybunch… this is your safe space anytime you need it. No pressure.",
+        "Langlang… you don’t have to be broken to deserve comfort.",
+        "Sugarplum… I love you in every moment, not just the hard ones."
+    ]},
+    { name: "When You Miss Me", icon: "🫂", letters: [
+        "Langga… I miss you too. You are always in my thoughts more than you know.",
+        "Baby… distance doesn’t reduce what I feel for you. It makes me appreciate you more.",
+        "Honeybunch… we are connected even when apart. I feel you.",
+        "Langlang… missing you just proves how real this bond is.",
+        "Sugarplum… I will always find my way back to you. You are my home."
+    ]},
+    { name: "When You Feel Lost", icon: "🗺", letters: [
+        "Langga… it’s okay to feel lost. Just take it step by step.",
+        "Baby… I’m still here walking beside you, not rushing you.",
+        "Honeybunch… being lost doesn’t mean you are failing. It means you are becoming.",
+        "Langlang… clarify will come. You are not alone in this confusion.",
+        "Sugarplum… even if you don’t know where you’re going, I believe you will find your way."
+    ]},
+    { name: "When You Need Comfort", icon: "🧸", letters: [
+        "Langga… come here in your thoughts and rest. I’ve got you.",
+        "Baby… I wish I could take away what hurts you. I'll stay with you through it.",
+        "Honeybunch… let my words be a place where your heart can breathe.",
+        "Langlang… you are not alone in anything you feel.",
+        "Sugarplum… you are safe, you are loved, and you are allowed to rest."
+    ]}
+];
+
+let typingInterval;
+
+function openSite() {
+    if (document.getElementById('pass').value.toUpperCase() == "HONEYBUNCHSUGARPLUM") {
+        document.getElementById('lock').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('lock').style.display = 'none';
+            document.querySelector('main').style.display = 'block';
+            let p = document.getElementById('player');
+            p.src += "&autoplay=1";
+            load();
+        }, 1000);
+    } else {
+        alert("Wrong password, my cute honeybunch! ❤️");
+    }
+}
+
+function load() {
+    let g = document.getElementById('grid');
+    data.forEach((c, idx) => {
+        let d = document.createElement('div');
+        d.className = 'box';
+        d.innerHTML = `<span style="font-size:2rem">${c.icon}</span><span class="category-name">${c.name}</span>`;
+        d.onclick = () => openCat(idx);
+        g.appendChild(d);
+    });
+}
+
+function openCat(idx) {
+    const category = data[idx];
+    const randomMsg = category.letters[Math.floor(Math.random() * category.letters.length)];
+    document.getElementById('modal').style.display = 'flex';
+    document.getElementById('t').innerText = category.name;
+    typeEffect(randomMsg);
+}
+
+function typeEffect(text) {
+    let el = document.getElementById('l');
+    el.innerHTML = "";
+    clearInterval(typingInterval);
+    let j = 0;
+    typingInterval = setInterval(() => {
+        el.innerHTML = text.slice(0, j++) + '<span style="color:var(--sparkle-pink)">♥</span>';
+        if (j > text.length) {
+            el.innerHTML = text;
+            clearInterval(typingInterval);
+        }
+    }, 30);
+}
+
+function closeM() {
+    document.getElementById('modal').style.display = 'none';
+    clearInterval(typingInterval);
+}
+
+setInterval(() => {
+    let h = document.createElement('div');
+    h.className = 'heart';
+    const icons = ['❤','💖','✨','⭐'];
+    h.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+    h.style.left = Math.random() * 100 + 'vw';
+    h.style.fontSize = (Math.random() * 20 + 12) + 'px';
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 6000);
+}, 450);
+</script>
+
+</body>
+</html>
+</body>
+</html>
